@@ -45,10 +45,8 @@ app.use(express.static(path.join(__dirname,"/public")));//for public folder
 
 const store =MongoStore.create({
 
-  mongoUrl: dburl,
-  crypto: {
-    secret: process.env.SECRET
-  },
+  mongoUrl:process.env.ATLASDB_URL,
+  secret: process.env.SECRET,
   touchAfter: 24 * 3600
 });
 
@@ -58,7 +56,7 @@ store.on("error" , (err) =>{
 
 
 const sessionOptions = {
-    store :  store,
+    store,
     secret:process.env.SECRET,
     resave: false, 
     saveUninitialized : true,
@@ -86,9 +84,9 @@ passport.deserializeUser(User.deserializeUser());
 //access flash(middleware defined)
 app.use((req,res,next) =>{
             //variables//
-    res.locals.success=req.flash("success") || [];
-    res.locals.error=req.flash("error") || [];
-    res.locals.currUser = req.user || null ; //stores current user information
+    res.locals.success=req.flash("success") ;
+    res.locals.error=req.flash("error")  ;
+    res.locals.currUser = req.user  ; //stores current user information
 
     next();
 });
